@@ -20,7 +20,7 @@ The application lets a customer:
 -  Complete the creation and setup of a free test account [here](https://dashboard.stripe.com/register)). You'll need a set of testmode API keys from the Stripe dashboard later.
 
 - Clone the repository and enter the project directory:
-bash git clone <repository-url>
+bash git clone https://github.com/chanpreet-glitch/sa-takehome-project-python
 cd sa-takehome-project-python
 
 - Create and activate a virtual environment:
