@@ -10,7 +10,19 @@
   </div>
   <div class="mt-40 text-center">
     <div class="mt-20 text-center text-secondary border-placeholder">
-      Add details about the payment here!
+      <!--Add details about the payment here!-->
+       <p>
+        Your have been successfully charged
+      $<span class="amount" data-amount="{{ amount }}"></span>
+    </p>
+
+    <p>
+      Your Stripe PaymentIntent ID is {{ payment_intent_id }}
+    </p>
+
+    <a href="/" class="btn btn-primary mt-20">
+      Return to shop
+    </a>
     </div>
   </div>
 </main>

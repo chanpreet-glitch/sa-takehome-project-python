@@ -17,20 +17,133 @@
     </div>
     <div class="card box-shadow mt-40">
       <div class="card-body">
-        <form name="payment-form">
+        <form id="payment-form" name="payment-form">
           <div>
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="you@email.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com">
           </div>
+          <!--Stripe Payment Element Section Starts-->
           <div class="mt-20 text-center text-secondary border-placeholder">
-            Add Stripe Element here!
+            <div id="payment-element"></div>
           </div>
+
+            <div
+            id="payment-message"
+            class="alert alert-danger mt-20"
+            hidden
+          ></div>
+          <!--Stripe Payment Element Section Ends-->
           <div class="mt-20">
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Pay $<span class="amount" data-amount="{{ amount }}"></span></button>
+            <button id="submit-button" type="submit" class="btn btn-lg btn-block btn-primary">Pay $<span class="amount" data-amount="{{ amount }}"></span></button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  const stripe = Stripe({{ publishable_key | tojson }});
+   // The item ID is used to request a server-created PaymentIntent.
+  // The browser never sends a price or amount.
+  const item = {{ item | tojson }};
+  const form = document.getElementById("payment-form");
+  const button = document.getElementById("submit-button");
+  const message = document.getElementById("payment-message");
+
+  // This will hold Stripe's payment-form controller after checkout starts.
+  let elements;
+
+  function showMessage(text) {
+    message.textContent = text;
+    message.hidden = false;
+  }
+
+  function hideMessage() {
+    message.textContent = "";
+    message.hidden = true;
+  }
+
+  async function initialize() {
+    try {
+      //create a PaymentIntent for the selected server-side BOOK catalog item.
+      const response = await fetch("/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          item: item
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to start checkout.");
+      }
+       // The client secret links this Payment Element to its PaymentIntent.
+      elements = stripe.elements({
+        clientSecret: data.clientSecret
+      });
+
+      const paymentElement = elements.create("payment", {
+        // paymentMethodOrder: ["card", "link"] //To prefer card over link
+       /** If Link payments are undesired for this flow, uncomment this section
+         wallets: {
+          link: "never"
+          } **/
+      });
+      paymentElement.mount("#payment-element");
+    } catch (error) {
+      showMessage(error.message);
+      button.disabled = true;
+    }
+  }
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+    hideMessage();
+
+    // Use the browser's required email validation before attempting payment.
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    button.disabled = true;
+
+    // Stripe.js securely collects and confirms payment details.
+    const result = await stripe.confirmPayment({
+      elements: elements,
+      confirmParams: {
+        return_url: window.location.origin + "/success"
+      },
+      redirect: "if_required"
+    });
+
+    if (result.error) {
+      //Display payment validation errors without leaving checkout.
+      showMessage(result.error.message);
+      button.disabled = false;
+      return;
+    }
+
+    if (result.paymentIntent.status === "succeeded") {
+      // The success route retrieves this PaymentIntent server-side before rendering.
+      window.location.href =
+        "/success?payment_intent=" +
+        encodeURIComponent(result.paymentIntent.id);
+      return;
+    }
+
+    showMessage("Payment is still processing. Please try again.");
+    button.disabled = false;
+  });
+  // Create the PaymentIntent and mount the Payment Element when checkout loads.
+  initialize();
+</script>
+
 {% endblock %}
