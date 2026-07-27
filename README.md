@@ -19,33 +19,33 @@ The application lets a customer:
 
 -  Complete the creation and setup of a free test account [here](https://dashboard.stripe.com/register)). You'll need a set of testmode API keys from the Stripe dashboard later.
 
-- Clone the repository and enter the project directory:
+- Clone the repository and enter the project directory:  
 bash git clone https://github.com/chanpreet-glitch/sa-takehome-project-python
 cd sa-takehome-project-python
 
-- Create and activate a virtual environment:
+- Create and activate a virtual environment:  
 bash python3 -m venv .venv source .venv/bin/activate
 
-- Install dependencies:
+- Install dependencies:  
 bash python -m pip install --upgrade pip python -m pip install -r requirements.txt
 
 
-- Create a `.env` file in the project root:
+- Create a `.env` file in the project root:  
 env STRIPE_SECRET_KEY=sk_test_... STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 Use test keys for local development. You can retrieve test keys from your dashboard using this [link](https://dashboard.stripe.com/test/apikeys)
 
-- Run the application:
-bash python app.py
+- Run the application:  
+bash python app.py  
 Navigate to [http://localhost:5000](http://localhost:5000) to view the index page.
 
 ## Testing a payment
 
 1. Select a book from the catalog by clicking on 'Purchase'.
 2. Enter an email address on checkout page.
-3. Enter Stripe’s test card details. You can use the ones below:
-   Card number: 4242 4242 4242 4242
-   Expiration: Any future date
+3. Enter Stripe’s test card details. You can use the ones below:  
+   Card number: 4242 4242 4242 4242  
+   Expiration: Any future date  
    CVC: Any three digits
 5. Submit the payment.
 6. Confirm that the success page displays the total amount charged and a PaymentIntent ID beginning with `pi_`.
@@ -105,10 +105,10 @@ I heavily relied on the following docs to gain in-depth understanding of the Pay
 
 ## Challenges
 1. Configuration issue with Flask 2.0.0 and Werkzeug compatibility - The required Werkzeug version is now added to `requirements.txt` so setup is reproducible.
-2. A multitude of syntax errors and library issues
-   2.a jsonify import error
-   2.b Payment Element failed to load due to missing attribute id for payment-form and submit-button.
-   2.c Syntax issues due to route decorator and the def it decorates not starting in the same column.
+2. A multitude of syntax errors and library issues  
+   2.a jsonify import error  
+   2.b Payment Element failed to load due to missing attribute id for payment-form and submit-button.  
+   2.c Syntax issues due to route decorator and the def it decorates not starting in the same column.  
 4. Use of paymentMethodOrder did not change the order of appearance of payment methods (Link surface still appears before card).
 
 
