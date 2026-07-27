@@ -44,12 +44,12 @@ Navigate to [http://localhost:5000](http://localhost:5000) to view the index pag
 1. Select a book from the catalog by clicking on 'Purchase'.
 2. Enter an email address on checkout page.
 3. Enter Stripe’s test card details. You can use the ones below:
-Card number: 4242 4242 4242 4242
-Expiration: Any future date
-CVC: Any three digits
-4. Submit the payment.
-5. Confirm that the success page displays the total amount charged and a PaymentIntent ID beginning with `pi_`.
-6. (Optionally) verify the payment in your Stripe Dashboard while viewing test-mode data.
+   Card number: 4242 4242 4242 4242
+   Expiration: Any future date
+   CVC: Any three digits
+5. Submit the payment.
+6. Confirm that the success page displays the total amount charged and a PaymentIntent ID beginning with `pi_`.
+7. (Optionally) verify the payment in your Stripe Dashboard while viewing test-mode data.
 
 ## Part 2: How does the solution work? Which Stripe APIs does it use? How is this application architected?
 
@@ -106,10 +106,10 @@ I heavily relied on the following docs to gain in-depth understanding of the Pay
 ## Challenges
 1. Configuration issue with Flask 2.0.0 and Werkzeug compatibility - The required Werkzeug version is now added to `requirements.txt` so setup is reproducible.
 2. A multitude of syntax errors and library issues
-    2.a jsonify import error
-    2.b Payment Element failed to load due to missing attribute id for payment-form and submit-button.
-    2.c Syntax issues due to route decorator and the def it decorates not starting in the same column.
-3. Use of paymentMethodOrder did not change the order of appearance of payment methods (Link surface still appears before card).
+   2.a jsonify import error
+   2.b Payment Element failed to load due to missing attribute id for payment-form and submit-button.
+   2.c Syntax issues due to route decorator and the def it decorates not starting in the same column.
+4. Use of paymentMethodOrder did not change the order of appearance of payment methods (Link surface still appears before card).
 
 
 ## Part 4: How can the same application be extended to build a more robust instance of the same?
